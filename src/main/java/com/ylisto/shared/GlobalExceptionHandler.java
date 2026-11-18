@@ -1,5 +1,6 @@
 package com.ylisto.shared;
 
+import com.ylisto.business.BusinessNotFoundException;
 import com.ylisto.clocking.AlreadyClockedInException;
 import com.ylisto.clocking.NotClockedInException;
 import com.ylisto.user.UserNotFoundException;
@@ -28,6 +29,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
     ProblemDetail handleUserNotFound(UserNotFoundException ex){
         return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(BusinessNotFoundException.class)
+    ProblemDetail handleBusinessNotFoundException(BusinessNotFoundException ex){
+        return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND,ex.getMessage());
     }
 
 
