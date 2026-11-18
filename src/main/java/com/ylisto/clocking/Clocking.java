@@ -15,18 +15,17 @@ public class Clocking {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name="id",updatable = false)
     private UUID id;
-    @Column(nullable = false )
+    @Column(nullable = false)
     private Instant clockIn;
     private Instant clockOut;
     @ManyToOne(optional = false, fetch = LAZY)
-
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public Clocking(User user, Instant clockIn, Instant clockOut) {
+    public Clocking(User user, Instant clockIn) {
         this.user = user;
         this.clockIn = clockIn;
-        this.clockOut = clockOut;
+
 
     }
 
@@ -47,5 +46,9 @@ public class Clocking {
 
     public User getUser() {
         return user;
+    }
+
+    public void clockOut(Instant time) {
+        this.clockOut = time;
     }
 }

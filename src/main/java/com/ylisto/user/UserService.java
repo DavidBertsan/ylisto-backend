@@ -4,6 +4,8 @@ import com.ylisto.business.Business;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -22,6 +24,10 @@ public class UserService {
         User user=new User(username,hashedPassword,business,name,mobile,role,imageUrl);
 
         return userRepository.save(user);
+    }
+    public User findById(UUID id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found: " + id));
     }
 
 }
