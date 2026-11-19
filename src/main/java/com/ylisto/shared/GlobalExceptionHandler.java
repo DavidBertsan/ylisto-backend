@@ -1,5 +1,6 @@
 package com.ylisto.shared;
 
+import com.ylisto.auth.InvalidCredentialsException;
 import com.ylisto.business.BusinessNotFoundException;
 import com.ylisto.clocking.AlreadyClockedInException;
 import com.ylisto.clocking.NotClockedInException;
@@ -34,6 +35,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessNotFoundException.class)
     ProblemDetail handleBusinessNotFoundException(BusinessNotFoundException ex){
         return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND,ex.getMessage());
+    }
+    @ExceptionHandler(InvalidCredentialsException.class)
+    ProblemDetail handleInvalidCredentialsException(InvalidCredentialsException ex){
+        return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
     }
 
 

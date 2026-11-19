@@ -1,10 +1,12 @@
 package com.ylisto.signup;
 
+import com.ylisto.security.SecurityConfig;
 import com.ylisto.user.Role;
 import com.ylisto.user.UsernameAlreadyExistsException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * blocks bad input BEFORE it reaches the service.
  */
 @WebMvcTest(SignupController.class)
+@Import(SecurityConfig.class)   // real rules: /signup must stay public
 class SignupControllerTest {
 
 	private static final String VALID_BODY = """
