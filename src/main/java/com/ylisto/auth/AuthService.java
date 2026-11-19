@@ -20,8 +20,8 @@ public class AuthService {
     }
 
     public LoginResponse login(LoginRequest request) {
-        User user = userService.findByUsername(request.username())                        // 1. find
-                .filter(u -> passwordEncoder.matches(request.password(), u.getPassword())) // 2. verify
+        User user = userService.findByUsername(request.username())
+                .filter(u -> u.isActive() && passwordEncoder.matches(request.password(), u.getPassword()))
                 .orElseThrow(() -> new InvalidCredentialsException("Invalid username or password"));
 
         return new LoginResponse(tokenService.issue(user));

@@ -28,6 +28,10 @@ public class User {
     @Column(nullable = false)
     private Role role;
     private String imageUrl;
+    @Column(nullable = false)
+    private boolean active = true;
+
+
 
     public User(String username, String password, Business business, String name, String mobile, Role role, String imageUrl) {
         this.username = username;
@@ -72,5 +76,12 @@ public class User {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+    public boolean isActive() {
+        return active;
+    }
+
+    public void deactivate() {
+        this.active = false;
     }
 }

@@ -24,7 +24,7 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * Stateless JWT security:
- * - POST /signup and POST /login are public, everything else needs a valid token.
+ * - POST /signup and POST /login are public, /team/** is ADMIN-only, everything else needs a valid token.
  * - Tokens are HS256-signed with ylisto.jwt.secret.
  * - The "role" claim becomes ROLE_ADMIN / ROLE_EMPLOYEE, so hasRole("ADMIN") works.
  */
@@ -38,6 +38,7 @@ public class SecurityConfig {
 				.sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers(HttpMethod.POST, "/signup", "/login").permitAll()
+						.requestMatchers("/team/**").hasRole("ADMIN")
 						.anyRequest().authenticated())
 				.oauth2ResourceServer(oauth -> oauth.jwt(jwt -> jwt.jwtAuthenticationConverter(roleConverter())))
 				.build();

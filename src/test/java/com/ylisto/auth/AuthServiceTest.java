@@ -55,6 +55,17 @@ class AuthServiceTest {
 	}
 
 	@Test
+	void shouldFailWithTheSameMessageWhenUserIsDeactivated() {
+		ana.deactivate();
+		when(userService.findByUsername("ana")).thenReturn(Optional.of(ana));
+
+		// Even with the correct password: a removed employee gets the generic 401
+		assertThatThrownBy(() -> authService.login(new LoginRequest("ana", "correct-password")))
+				.isInstanceOf(InvalidCredentialsException.class)
+				.hasMessage("Invalid username or password");
+	}
+
+	@Test
 	void shouldFailWithTheSameMessageWhenUserDoesNotExist() {
 		when(userService.findByUsername("ghost")).thenReturn(Optional.empty());
 

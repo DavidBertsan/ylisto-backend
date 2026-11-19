@@ -4,6 +4,7 @@ import com.ylisto.business.Business;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,6 +34,12 @@ public class UserService {
 
     public Optional<User> findByUsername(String username){
         return userRepository.findByUsername(username);
+    }
+    public Optional<User> findByIdAndBusinessId(UUID id,UUID businessId){
+        return userRepository.findByIdAndBusinessId(id,businessId);
+    }
+    public List<User> findAllByBusinessIdAndActiveTrue(UUID businessId){
+        return userRepository.findAllByBusinessIdAndActiveTrue(businessId);
     }
 
 }

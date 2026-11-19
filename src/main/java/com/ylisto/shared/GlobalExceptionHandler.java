@@ -4,6 +4,7 @@ import com.ylisto.auth.InvalidCredentialsException;
 import com.ylisto.business.BusinessNotFoundException;
 import com.ylisto.clocking.AlreadyClockedInException;
 import com.ylisto.clocking.NotClockedInException;
+import com.ylisto.team.CannotRemoveYourselfException;
 import com.ylisto.user.UserNotFoundException;
 import com.ylisto.user.UsernameAlreadyExistsException;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidCredentialsException.class)
     ProblemDetail handleInvalidCredentialsException(InvalidCredentialsException ex){
         return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    }
+    @ExceptionHandler(CannotRemoveYourselfException.class)
+    ProblemDetail handleCannotRemoveYourselfException(CannotRemoveYourselfException ex){
+        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
     }
 
 
