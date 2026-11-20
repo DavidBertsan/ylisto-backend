@@ -5,6 +5,9 @@ import com.ylisto.business.BusinessNotFoundException;
 import com.ylisto.clocking.AlreadyClockedInException;
 import com.ylisto.clocking.NotClockedInException;
 import com.ylisto.inventory.ProductNotFoundException;
+import com.ylisto.shift.InvalidShiftException;
+import com.ylisto.shift.ShiftNotFoundException;
+import com.ylisto.shift.ShiftOverlapException;
 import com.ylisto.team.CannotRemoveYourselfException;
 import com.ylisto.user.UserNotFoundException;
 import com.ylisto.user.UsernameAlreadyExistsException;
@@ -48,6 +51,18 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(ProductNotFoundException.class)
     ProblemDetail handleProductNotfoundException(ProductNotFoundException ex){
+        return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+    @ExceptionHandler(InvalidShiftException.class)
+    ProblemDetail handleInvalidShiftException(InvalidShiftException ex){
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+    @ExceptionHandler(ShiftOverlapException.class)
+    ProblemDetail handleShiftOverlapException(ShiftOverlapException ex){
+        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+    }
+    @ExceptionHandler(ShiftNotFoundException.class)
+    ProblemDetail handleShiftNotFoundException(ShiftNotFoundException ex){
         return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 

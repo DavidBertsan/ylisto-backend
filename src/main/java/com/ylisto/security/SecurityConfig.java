@@ -40,6 +40,8 @@ public class SecurityConfig {
 						.requestMatchers(HttpMethod.POST, "/signup", "/login").permitAll()
 						.requestMatchers("/team/**").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.POST, "/products/**").hasRole("ADMIN")   // reading stock: any user
+						.requestMatchers(HttpMethod.POST, "/shifts/**").hasRole("ADMIN")     // reading my schedule: any user
+						.requestMatchers(HttpMethod.DELETE, "/shifts/**").hasRole("ADMIN")
 						.anyRequest().authenticated())
 				.oauth2ResourceServer(oauth -> oauth.jwt(jwt -> jwt.jwtAuthenticationConverter(roleConverter())))
 				.build();
