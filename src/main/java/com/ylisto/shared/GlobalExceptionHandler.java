@@ -4,6 +4,7 @@ import com.ylisto.auth.InvalidCredentialsException;
 import com.ylisto.business.BusinessNotFoundException;
 import com.ylisto.clocking.AlreadyClockedInException;
 import com.ylisto.clocking.NotClockedInException;
+import com.ylisto.inventory.ProductNotFoundException;
 import com.ylisto.team.CannotRemoveYourselfException;
 import com.ylisto.user.UserNotFoundException;
 import com.ylisto.user.UsernameAlreadyExistsException;
@@ -44,6 +45,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CannotRemoveYourselfException.class)
     ProblemDetail handleCannotRemoveYourselfException(CannotRemoveYourselfException ex){
         return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+    }
+    @ExceptionHandler(ProductNotFoundException.class)
+    ProblemDetail handleProductNotfoundException(ProductNotFoundException ex){
+        return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
 

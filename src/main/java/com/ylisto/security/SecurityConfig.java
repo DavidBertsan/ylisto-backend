@@ -39,6 +39,7 @@ public class SecurityConfig {
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers(HttpMethod.POST, "/signup", "/login").permitAll()
 						.requestMatchers("/team/**").hasRole("ADMIN")
+						.requestMatchers(HttpMethod.POST, "/products/**").hasRole("ADMIN")   // reading stock: any user
 						.anyRequest().authenticated())
 				.oauth2ResourceServer(oauth -> oauth.jwt(jwt -> jwt.jwtAuthenticationConverter(roleConverter())))
 				.build();
