@@ -11,6 +11,7 @@ import com.ylisto.shift.InvalidShiftException;
 import com.ylisto.shift.ShiftNotFoundException;
 import com.ylisto.shift.ShiftOverlapException;
 import com.ylisto.team.CannotRemoveYourselfException;
+import com.ylisto.user.InvalidPasswordException;
 import com.ylisto.user.UserNotFoundException;
 import com.ylisto.user.UsernameAlreadyExistsException;
 import org.springframework.http.HttpStatus;
@@ -81,6 +82,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidMovementException.class)
     ProblemDetail handleInvalidMovementException(InvalidMovementException ex){
         return  ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+    @ExceptionHandler(InvalidPasswordException.class)
+    ProblemDetail handleInvalidPasswordException(InvalidPasswordException ex){
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
 }

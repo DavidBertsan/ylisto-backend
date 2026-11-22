@@ -84,4 +84,14 @@ public class User {
     public void deactivate() {
         this.active = false;
     }
+
+    public void updateProfile(String name,String mobile,String imageUrl){
+        this.name=name;
+        this.mobile=mobile;
+        this.imageUrl=imageUrl;
+    }
+    public void changePassword(String encodedPassword){
+        this.password=encodedPassword;
+    }
+
 }
