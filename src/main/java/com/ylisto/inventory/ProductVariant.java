@@ -2,6 +2,7 @@ package com.ylisto.inventory;
 
 import jakarta.persistence.*;
 
+
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -20,6 +21,8 @@ public class ProductVariant {
     private BigDecimal price;
     @Column(nullable = false, precision = 10, scale = 3)
     private BigDecimal quantity;
+    @Version
+    private Long version;
 
     public ProductVariant(Product product, String label, BigDecimal price, BigDecimal quantity) {
         this.product = product;
@@ -49,5 +52,12 @@ public class ProductVariant {
 
     public BigDecimal getQuantity() {
         return quantity;
+    }
+
+    public void applyMovement(BigDecimal change) {
+        BigDecimal newQuantity = quantity.add(change);
+        if(newQuantity.signum() < 0){
+            throw new InsufficientStockException("Insufficient stock for " + label + ": available " + quantity);}
+        this.quantity = newQuantity;
     }
 }

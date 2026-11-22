@@ -42,6 +42,7 @@ public class SecurityConfig {
 						.requestMatchers(HttpMethod.POST, "/products/**").hasRole("ADMIN")   // reading stock: any user
 						.requestMatchers(HttpMethod.POST, "/shifts/**").hasRole("ADMIN")     // reading my schedule: any user
 						.requestMatchers(HttpMethod.DELETE, "/shifts/**").hasRole("ADMIN")
+						.requestMatchers(HttpMethod.GET, "/movements/**").hasRole("ADMIN")  // registering a movement: any user
 						.anyRequest().authenticated())
 				.oauth2ResourceServer(oauth -> oauth.jwt(jwt -> jwt.jwtAuthenticationConverter(roleConverter())))
 				.build();

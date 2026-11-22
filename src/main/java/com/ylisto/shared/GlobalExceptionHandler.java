@@ -4,6 +4,8 @@ import com.ylisto.auth.InvalidCredentialsException;
 import com.ylisto.business.BusinessNotFoundException;
 import com.ylisto.clocking.AlreadyClockedInException;
 import com.ylisto.clocking.NotClockedInException;
+import com.ylisto.inventory.InsufficientStockException;
+import com.ylisto.inventory.InvalidMovementException;
 import com.ylisto.inventory.ProductNotFoundException;
 import com.ylisto.shift.InvalidShiftException;
 import com.ylisto.shift.ShiftNotFoundException;
@@ -13,11 +15,18 @@ import com.ylisto.user.UserNotFoundException;
 import com.ylisto.user.UsernameAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    // Two writes raced on the same @Version row: the client should reload and retry
+    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+    ProblemDetail handleConcurrentUpdate(ObjectOptimisticLockingFailureException ex) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, "The resource was modified concurrently, please retry");
+    }
 
     @ExceptionHandler(AlreadyClockedInException.class)
     ProblemDetail handleAlreadyClockedIn(AlreadyClockedInException ex) {
@@ -65,6 +74,13 @@ public class GlobalExceptionHandler {
     ProblemDetail handleShiftNotFoundException(ShiftNotFoundException ex){
         return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
     }
-
+    @ExceptionHandler(InsufficientStockException.class)
+    ProblemDetail handleInsufficientStockException(InsufficientStockException ex){
+        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT,ex.getMessage());
+    }
+    @ExceptionHandler(InvalidMovementException.class)
+    ProblemDetail handleInvalidMovementException(InvalidMovementException ex){
+        return  ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
 
 }
