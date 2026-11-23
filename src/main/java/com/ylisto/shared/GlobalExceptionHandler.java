@@ -7,6 +7,8 @@ import com.ylisto.clocking.NotClockedInException;
 import com.ylisto.inventory.InsufficientStockException;
 import com.ylisto.inventory.InvalidMovementException;
 import com.ylisto.inventory.ProductNotFoundException;
+import com.ylisto.messaging.ConversationNotFoundException;
+import com.ylisto.messaging.InvalidConversationException;
 import com.ylisto.shift.InvalidShiftException;
 import com.ylisto.shift.ShiftNotFoundException;
 import com.ylisto.shift.ShiftOverlapException;
@@ -85,6 +87,14 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(InvalidPasswordException.class)
     ProblemDetail handleInvalidPasswordException(InvalidPasswordException ex){
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+    @ExceptionHandler(ConversationNotFoundException.class)
+    ProblemDetail handleConversationNotFoundException(ConversationNotFoundException ex){
+        return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+    @ExceptionHandler(InvalidConversationException.class)
+    ProblemDetail handleInvalidConversationException(InvalidConversationException ex){
         return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
