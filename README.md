@@ -4,7 +4,7 @@
 
 REST API for **YListo**, a multi-tenant management tool for small businesses (butcher shops, bars, clothing stores): employee clock-in/out, team, work shifts, inventory with stock movements, profiles and 1-to-1 messaging, behind JWT authentication.
 
-**Stack:** Java 25 · Spring Boot 4 · Spring Security (JWT) · Spring Data JPA · PostgreSQL · Testcontainers · JUnit 5 / Mockito · Docker · GitHub Actions
+**Stack:** Java 25 · Spring Boot 4 · Spring Security (JWT) · Spring Data JPA · PostgreSQL · Flyway · Testcontainers · JUnit 5 / Mockito · Docker · GitHub Actions
 
 ## Features
 
@@ -31,18 +31,29 @@ REST API for **YListo**, a multi-tenant management tool for small businesses (bu
 - **Stock you can trust.** A movement and its stock change are saved in one transaction, stock can never go negative (`409`), and `@Version` optimistic locking stops two concurrent sales from silently overwriting each other.
 - **One conversation per pair.** Participants are stored in a fixed order (smaller id first) behind a unique constraint, so Ana→Pepe and Pepe→Ana resolve to the same conversation and the database itself refuses a duplicate. Messages are delivered by polling (`?after=`); WebSocket can be added on top without changing the model.
 - **Soft delete for employees.** Clock-in history is kept, since Spanish law requires keeping work-time records.
+- **Versioned schema.** Flyway migrations own the schema (readable constraint names, indexes on the foreign keys the queries filter by); Hibernate only validates that the entities match it.
 - **Errors as RFC 9457 `ProblemDetail`**, with consistent 400 / 401 / 403 / 404 / 409 responses.
 
 ## Run locally
 
-Requirements: JDK 25 and Docker.
+**One command, only Docker needed** (no JDK): builds the image, starts PostgreSQL, applies the Flyway migrations and starts the API.
 
 ```bash
-docker compose up -d
+docker compose up --build
+```
+
+**For development** (JDK 25): start only the database and run the app from your IDE or Maven.
+
+```bash
+docker compose up -d db
 ./mvnw spring-boot:run
 ```
 
-The API starts on `http://localhost:8080`.
+Either way, the API starts on `http://localhost:8080`.
+
+### How it would be deployed
+
+The image is cloud-ready: the app is stateless and takes its database and JWT secret from environment variables, and Flyway migrates the schema on startup. The target setup is the container on a small VM (e.g. AWS EC2) and PostgreSQL as a managed database with backups (e.g. AWS RDS), kept separate so the app can be replaced or scaled without touching the data.
 
 ## Try it
 
@@ -92,6 +103,6 @@ Docker must be running for the integration tests.
 
 ## Roadmap
 
-- Flyway migrations and cloud deployment
+- Cloud deployment (container on EC2 + managed PostgreSQL on RDS)
 - Mobile app with Compose Multiplatform (Android first)
 - Real-time messaging over WebSocket, group chats and read receipts
